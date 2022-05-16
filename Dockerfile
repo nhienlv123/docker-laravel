@@ -7,10 +7,18 @@ ARG uid
 COPY ./ /var/www/html
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-# RUN composer update
-RUN composer install
+
+RUN composer update
+# RUN composer install
 RUN php artisan key:generate
 RUN docker-php-ext-install pdo pdo_mysql
+
+# Vue
+# RUN composer require laravel/ui
+RUN apt-get update \
+    && apt-get install -y npm
+RUN npm install -y vue@2
+
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
